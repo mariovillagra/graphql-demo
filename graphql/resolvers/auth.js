@@ -3,7 +3,10 @@ const jwt = require('jsonwebtoken')
 const User = require('../../models/user')
 
 module.exports = {
-  createUser: async args => {
+  createUser: async (args, req) => {
+    if (!req.isAuth) {
+      throw new Error('Unauthenticated!')
+    }
     try {
       const existingUser = await User.findOne({ email: args.userInput.email })
       if (existingUser) {
